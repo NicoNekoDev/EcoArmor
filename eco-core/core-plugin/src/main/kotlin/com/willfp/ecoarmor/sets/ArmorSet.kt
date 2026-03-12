@@ -96,14 +96,18 @@ class ArmorSet(
             for (key in amountsConfig.getKeys(false)) {
                 val amount = key.toIntOrNull() ?: continue
                 val amountConfig = amountsConfig.getSubsection(key)
-                
+
                 val partialEffects = Effects.compile(
                     amountConfig.getSubsections("effects"),
                     ViolationContext(plugin, "Armor Set $id (partial-set-$amount)")
                 )
-                
+
                 if (partialEffects.isNotEmpty()) {
-                    partialHolders[amount] = SimpleHolder(plugin.namespacedKeyFactory.create("${id}_partial_set_$amount"), partialEffects, conditions)
+                    partialHolders[amount] = SimpleHolder(
+                        plugin.namespacedKeyFactory.create("${id}_partial_set_$amount"),
+                        partialEffects,
+                        conditions
+                    )
                 }
             }
         }
@@ -293,7 +297,7 @@ class ArmorSet(
             }
         }
 
-        plugin.scheduler.run {
+        plugin.scheduler.runTask {
             Recipes.createAndRegisterRecipe(
                 plugin,
                 "${id}_${slot.name.lowercase(Locale.getDefault())}",
